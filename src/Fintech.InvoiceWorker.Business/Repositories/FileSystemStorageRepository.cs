@@ -1,9 +1,11 @@
 ﻿using Fintech.InvoiceWorker.Business.Models;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace Fintech.InvoicesWorker.Business.Repositories
+namespace Fintech.InvoiceWorker.Business.Repositories
 {
     /// <summary>
     /// Repository to store files in a directory from local file system.
@@ -22,9 +24,11 @@ namespace Fintech.InvoicesWorker.Business.Repositories
             throw new NotImplementedException();
         }
 
-        public void WriteFile(string fileName, byte[] data)
+        public async Task WriteFile(string fileName, byte[] data)
         {
-            throw new NotImplementedException();
+            var path = Path.Combine(_options.InvoicesDirectory, fileName);
+            // This overwrites the file if it already exists
+            await File.WriteAllBytesAsync(path, data);
         }
     }
 }

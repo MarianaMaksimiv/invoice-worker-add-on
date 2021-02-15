@@ -10,11 +10,19 @@
 
   <ItemGroup>
     <Folder Include="Extensions\" />
+    <Folder Include="Templates\" />
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="itext7.pdfhtml" Version="3.0.3" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="5.0.0" />
     <PackageReference Include="Newtonsoft.Json" Version="12.0.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="Templates\InvoiceTemplate.html">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

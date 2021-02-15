@@ -8,6 +8,6 @@ namespace Fintech.InvoiceWorker.Business.Repositories
 {
     public interface IInvoiceEventsRepository
     {
-        Task<List<Invoice>> GetInvoicesEvents(int pageSize, int afterEventId);
+        Task<List<FeedItem>> GetInvoicesEvents(int pageSize, int afterEventId);
     }
 }

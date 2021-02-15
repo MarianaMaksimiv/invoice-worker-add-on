@@ -34,7 +34,7 @@ namespace Fintech.InvoiceWorker.Business.Repositories
         /// <param name="pageSize">Default value 10</param>
         /// <param name="afterEventId">Default value 0, means the latest more recent event</param>
         /// <returns></returns>
-        public async Task<List<Invoice>> GetInvoicesEvents(int pageSize = 10, int afterEventId = 0)
+        public async Task<List<FeedItem>> GetInvoicesEvents(int pageSize = 10, int afterEventId = 0)
         {
             _logger.LogDebug($"Sending GET request to the Invoices Feed {_feedUrl}");
 
@@ -47,7 +47,7 @@ namespace Fintech.InvoiceWorker.Business.Repositories
             var responseString = await response.Content.ReadAsStringAsync();
             var feedContent = JsonConvert.DeserializeObject<FeedContent>(responseString);
 
-            return feedContent.Items.Select(i => i.Content)?.ToList();
+            return feedContent.Items;
         }
     }
 }

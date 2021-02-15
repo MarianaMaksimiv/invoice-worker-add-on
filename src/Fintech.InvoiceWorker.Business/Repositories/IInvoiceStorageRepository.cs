@@ -1,8 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
-namespace Fintech.InvoicesWorker.Business.Repositories
+namespace Fintech.InvoiceWorker.Business.Repositories
 {
     public interface IInvoiceStorageRepository
     {
@@ -12,8 +13,8 @@ namespace Fintech.InvoicesWorker.Business.Repositories
         /// </summary>
         /// <param name="fileName"></param>
         /// <param name="data"></param>
-        public void WriteFile(string fileName, byte[] data);
+        Task WriteFile(string fileName, byte[] data);
 
-        public double SpaceLeftInMB();
+        double SpaceLeftInMB();
     }
 }

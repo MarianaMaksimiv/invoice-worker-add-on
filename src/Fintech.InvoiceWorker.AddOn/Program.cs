@@ -1,12 +1,14 @@
 ﻿using Fintech.InvoiceWorker.Business.Models;
 using Fintech.InvoiceWorker.Business.Repositories;
 using Fintech.InvoiceWorker.Business.Services;
+using Fintech.InvoiceWorker.Business.Writers;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.CommandLine;
 using System.CommandLine.Invocation;
+using System.Threading;
 
 namespace Fintech.InvoiceWorker.AddOn
 {
@@ -20,12 +22,20 @@ namespace Fintech.InvoiceWorker.AddOn
 
             var inputFeedOption = new Option(
               aliases: new string[] { "--feed-url", "-f" },
-              description: "The url to the Feed with the invoices data.");
+              description: "The url to the Feed with the invoices data.")
+            {
+                IsRequired = true,
+                Argument = new Argument<string>()
+            };
             cmd.AddOption(inputFeedOption);
 
             var inputStorageOption = new Option(
               aliases: new string[] { "--invoice-dir", "-i" },
-              description: "The path to the directory to store the PDF files.");
+              description: "The path to the directory to store the PDF files.")
+            {
+                IsRequired = true,
+                Argument = new Argument<string>()
+            };
             cmd.AddOption(inputStorageOption);
 
             cmd.AddOption(new Option(new[] { "--verbose", "-v" }, "Show the logs."));
@@ -36,21 +46,21 @@ namespace Fintech.InvoiceWorker.AddOn
             return cmd.Invoke(args);
         }
 
-        static void HandleReadFeed(string feedUrl, string invoicesDirectory, bool verbose, IConsole console)
+        static void HandleReadFeed(string feedUrl, string invoiceDir, bool verbose, IConsole console)
         {
             var serviceProvider = ConfigureServices(new InvoiceWorkerOptions
             {
                 FeedUrl = feedUrl,
-                InvoicesDirectory = invoicesDirectory
+                InvoicesDirectory = invoiceDir
             }, verbose);
 
             while(true)
             {
-                serviceProvider.GetService<IInvoiceWorkerService>().ProcessInvoices();
-                Console.ReadKey(true);
-            }
+                serviceProvider.GetService<IInvoiceWorkerService>().CreateInvoicesDocuments();
 
-            //DisposeServices(serviceProvider);
+                // TODO: Remove later, adding this here to prevent running out of space and to test more easily
+                Thread.Sleep(2000);
+            }
         }
 
         private static ServiceProvider ConfigureServices(InvoiceWorkerOptions options, bool verbose)
@@ -70,21 +80,11 @@ namespace Fintech.InvoiceWorker.AddOn
                 .AddSingleton(o => options)
                 .AddScoped<IInvoiceWorkerService, InvoiceWorkerService>()
                 .AddScoped<IInvoiceEventsRepository, InvoiceEventsRepository>()
+                .AddScoped<IInvoiceStorageRepository, FileSystemStorageRepository>()
+                .AddScoped<IInvoiceDocumentWriter, PDFDocumentWriter>()
                 .AddHttpClient();
             var serviceProvider = services.BuildServiceProvider(true);
             return serviceProvider;
-        }
-
-        private static void DisposeServices(ServiceProvider serviceProvider)
-        {
-            if (serviceProvider == null)
-            {
-                return;
-            }
-            if (serviceProvider is IDisposable)
-            {
-                ((IDisposable)serviceProvider).Dispose();
-            }
         }
 
         private static LogLevel GetLogLevel(bool verbose)
