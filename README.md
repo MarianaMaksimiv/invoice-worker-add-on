@@ -7,9 +7,8 @@ Invoice Worker add-on Repository. This add-on reads from a json feed and creates
 
 First version:
 * Console app tool using local/filesystem storage
-
-[Class Diagram](resources/InvoiceWorkerOverview-Architecture.jpg)
-[Architecture Diagram](resources/InvoiceWorkerOverview-ClassDiagram.jpg)
+    * [Class Diagram](resources/InvoiceWorkerOverview-ClassDiagram.jpg)
+    * [Architecture Diagram](resources/InvoiceWorkerOverview-Architecture.jpg)
 
 ## Assumptions you made
 
