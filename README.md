@@ -8,15 +8,15 @@ Invoice Worker add-on Repository. This add-on reads from a json feed and creates
 First version:
 * Console app tool using local/filesystem storage
 
-<iframe src="https://drive.google.com/file/d/1lMyaeC_wERjMbzRcfT59e0o_ec6XCwey/preview" width="640" height="480"></iframe>
+[Architecture Diagram](https://drive.google.com/file/d/1lMyaeC_wERjMbzRcfT59e0o_ec6XCwey/preview)
 
 ## Assumptions you made
 
-* Use Anonymous authentication for first version. Connecting to the feed might probably require authentication but let's say that it's not needed for now.
+* Use Anonymous authentication for first version. Connecting to the feed will probably require authentication but let's say that it's not needed for now.
 * Don't create invoices if the status is "SENT" or "DELETED"
 * Files retention policy:
-** The app will use up to 98% of the storage available (this is configurable)
-** The app won't run if there is no more storage available
+    * The app will use up to 98% of the storage available (this is configurable)
+    * The app won't run if there is no more storage available
 * It won't create invoices for historical records, it means that it will start with the latest invoice (afterEventId=0)
 * I don't wanna create a database to store the data from this feed, so I'm assuming for now that INVOICE_UPDATES includes ALL the lines. Therefore I won't be adding logic to merge data, specially given that the updates from the feed are at the Invoice Level and not the lines, so it would be impossible to rebuild the state for them in some scenarios (i.e if they were deleted).
 
@@ -53,9 +53,9 @@ Create more versions with improvements based on what the users need:
  * Add Application Insights and better telemetry
  
  Scale the solution as required. Therefore ask stuff related to performance, i.e number of users, expected traffic:
- ** Better support for large noisy feeds (might not be required depending on the nature of the source feed)
- ** Choose a different architecture if scalability is an issue, like Kubernetes, Functions (auto-scaling)
- ** Calculate pricing as depending on what you add
+ * Better support for large noisy feeds (might not be required depending on the nature of the source feed)
+ * Choose a different architecture if scalability is an issue, like Kubernetes, Functions (auto-scaling)
+ * Calculate pricing as depending on what you add
 
 ## Getting Started
 
